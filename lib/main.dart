@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:tcp_socket_connection/tcp_socket_connection.dart';
 
 void main() {
@@ -37,6 +38,9 @@ class _MyHomePageState extends State<MyHomePage> {
   String serverIp = "";
   int serverPort = 0;
 
+  Timer? pingTimer;
+  TcpSocketConnection? socketConnection;
+
   void messageReceived(String msg) {
     setState(() {
       roomCode = msg;
@@ -44,13 +48,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void getRoomCode() async {
-    print(serverIp + ":" + serverPort.toString());
-    TcpSocketConnection socketConnection = TcpSocketConnection(serverIp, serverPort);
-    socketConnection.enableConsolePrint(true);
-    if (await socketConnection.canConnect(5000, attempts: 3)) {
-      await socketConnection.connect(5000, messageReceived, attempts: 3);
-      socketConnection.sendMessage("MessageIsReceived :D ");
+    if (socketConnection != null) {
+      socketConnection!.sendMessage('{"action": "getRoomCode"}');
     }
+  }
+
+  void initiateConnection() async {
+    socketConnection = TcpSocketConnection(serverIp, serverPort);
+    socketConnection!.enableConsolePrint(true);
+    bool canConnect = await socketConnection!.canConnect(5000, attempts: 3);
+    if (canConnect) await socketConnection!.connect(5000, messageReceived, attempts: 3);
+    if (pingTimer != null) {
+      pingTimer!.cancel();
+    }
+    pingTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      getRoomCode();
+    });
   }
 
   @override
@@ -94,9 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: getRoomCode,
+        onPressed: initiateConnection,
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.accessible_forward),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
