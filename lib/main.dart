@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:jackboxautovip/webview.dart';
 import 'package:tcp_socket_connection/tcp_socket_connection.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -103,6 +105,15 @@ class _MyHomePageState extends State<MyHomePage> {
               roomCode,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Webview()),
+                  );
+                },
+                child: Text("Open Website")
+            )
           ],
         ),
       ),
