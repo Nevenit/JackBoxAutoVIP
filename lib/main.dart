@@ -39,14 +39,16 @@ class _MyHomePageState extends State<MyHomePage> {
   String username = "";
 
   String serverIp = "";
-  int serverPort = 0;
+  int serverPort = 38469;
 
   Timer? pingTimer;
   TcpSocketConnection? socketConnection;
 
   void messageReceived(String msg) {
     setState(() {
-      roomCode = msg;
+      if (msg != roomCode) {
+        roomCode = msg;
+      }
     });
   }
 
@@ -90,16 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
               onChanged: (text) {
                 //serverIp = text;
                 serverIp = "192.168.20.2";
-              },
-            ),
-            TextField(
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Server Port',
-              ),
-              onChanged: (text) {
-                //serverPort = int.parse(text);
-                serverPort = 6969;
               },
             ),
             TextField(
