@@ -36,6 +36,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String roomCode = "";
+  String username = "";
 
   String serverIp = "";
   int serverPort = 0;
@@ -57,13 +58,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void initiateConnection() async {
     socketConnection = TcpSocketConnection(serverIp, serverPort);
-    socketConnection!.enableConsolePrint(true);
+    //socketConnection!.enableConsolePrint(true);
     bool canConnect = await socketConnection!.canConnect(5000, attempts: 3);
     if (canConnect) await socketConnection!.connect(5000, messageReceived, attempts: 3);
     if (pingTimer != null) {
       pingTimer!.cancel();
     }
-    pingTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    pingTimer = Timer.periodic(Duration(milliseconds: 250), (timer) {
       getRoomCode();
     });
   }
@@ -85,8 +86,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 border: OutlineInputBorder(),
                 hintText: 'Server IP',
               ),
+
               onChanged: (text) {
-                serverIp = text;
+                //serverIp = text;
+                serverIp = "192.168.20.2";
               },
             ),
             TextField(
@@ -95,7 +98,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 hintText: 'Server Port',
               ),
               onChanged: (text) {
-                serverPort = int.parse(text);
+                //serverPort = int.parse(text);
+                serverPort = 6969;
+              },
+            ),
+            TextField(
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Username',
+              ),
+              onChanged: (text) {
+                username = text;
               },
             ),
             const Text(
@@ -109,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Webview()),
+                    MaterialPageRoute(builder: (context) => WebView(roomCode: roomCode, username: username,)),
                   );
                 },
                 child: Text("Open Website")
