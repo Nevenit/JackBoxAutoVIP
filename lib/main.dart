@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:jackboxautovip/webview.dart';
 import 'package:tcp_socket_connection/tcp_socket_connection.dart';
@@ -41,7 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
   String serverIp = "";
   int serverPort = 38469;
 
-  Timer? pingTimer;
   TcpSocketConnection? socketConnection;
 
   void messageReceived(String msg) {
@@ -63,12 +60,6 @@ class _MyHomePageState extends State<MyHomePage> {
     //socketConnection!.enableConsolePrint(true);
     bool canConnect = await socketConnection!.canConnect(5000, attempts: 3);
     if (canConnect) await socketConnection!.connect(5000, messageReceived, attempts: 3);
-    if (pingTimer != null) {
-      pingTimer!.cancel();
-    }
-    pingTimer = Timer.periodic(Duration(milliseconds: 250), (timer) {
-      getRoomCode();
-    });
   }
 
   @override
