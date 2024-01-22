@@ -88,12 +88,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 border: OutlineInputBorder(),
                 hintText: 'Server IP',
               ),
-
               onChanged: (text) {
-                //serverIp = text;
-                serverIp = "192.168.20.2";
+                serverIp = text;
               },
             ),
+            FilledButton(onPressed: initiateConnection, child: const Text("Connect")),
+            const SizedBox(height: 10,),
             TextField(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -110,23 +110,18 @@ class _MyHomePageState extends State<MyHomePage> {
               roomCode,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            TextButton(
+            FilledButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => WebView(roomCode: roomCode, username: username,)),
                   );
                 },
-                child: Text("Open Website")
+                child: const Text("Open Website")
             )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: initiateConnection,
-        tooltip: 'Increment',
-        child: const Icon(Icons.accessible_forward),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
