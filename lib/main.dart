@@ -44,10 +44,21 @@ class _MyHomePageState extends State<MyHomePage> {
   void messageReceived(String msg) {
     if (msg.startsWith("RoomCode:")) {
       setState(() {
-          if (msg != roomCode) {
-            roomCode = msg;
+        String recievedCode = msg.substring("RoomCode:".length);
+          if (recievedCode != roomCode) {
+            roomCode = recievedCode;
+            joinGame();
           }
       });
+    }
+  }
+
+  void joinGame() {
+    if (username != "") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => WebView(roomCode: roomCode, username: username,)),
+      );
     }
   }
 
