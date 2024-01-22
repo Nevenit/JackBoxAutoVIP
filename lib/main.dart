@@ -42,22 +42,23 @@ class _MyHomePageState extends State<MyHomePage> {
   TcpSocketConnection? socketConnection;
 
   void messageReceived(String msg) {
-    setState(() {
-      if (msg != roomCode) {
-        roomCode = msg;
-      }
-    });
+    if (msg.startsWith("RoomCode:")) {
+      setState(() {
+          if (msg != roomCode) {
+            roomCode = msg;
+          }
+      });
+    }
   }
 
   void getRoomCode() async {
     if (socketConnection != null) {
-      socketConnection!.sendMessage('{"action": "getRoomCode"}');
+      socketConnection!.sendMessage('GetRoomCode');
     }
   }
 
   void initiateConnection() async {
     socketConnection = TcpSocketConnection(serverIp, serverPort);
-    //socketConnection!.enableConsolePrint(true);
     bool canConnect = await socketConnection!.canConnect(5000, attempts: 3);
     if (canConnect) await socketConnection!.connect(5000, messageReceived, attempts: 3);
   }
